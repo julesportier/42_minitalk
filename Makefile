@@ -16,26 +16,27 @@ OBJ_SRV := $(SRC_SRV:%.c=%.o)
 OBJ_CLI := $(SRC_CLI:%.c=%.o)
 
 #FT_PRINTF_DIR := ft_printf/
-LIB := ftprintf
-LIB_DIR := lib/ft_printf/
+LIBFT := ft
+LIBFT_DIR := ./libft/
 
-all: lib $(NAME)
-srv: lib $(SERVER)
-cli: lib $(CLIENT)
-lib:
-	make -C $(LIB_DIR)
+all: libft $(NAME)
+srv: libft $(SERVER)
+cli: libft $(CLIENT)
+libft:
+	make -C $(LIBFT_DIR)
 
 $(SERVER): $(OBJ_SRV)
-	$(CC) $(CFLAGS) $< -o $@ -L$(LIB_DIR) -l$(LIB)
+	$(CC) $(CFLAGS) $< -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
+
 $(CLIENT): $(OBJ_CLI)
-	$(CC) $(CFLAGS) $< -o $@ -L$(LIB_DIR) -l$(LIB)
+	$(CC) $(CFLAGS) $< -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
 %.o: %.c Makefile
-	$(CC) $(CFLAGS) -c $< -o $@ -I$(LIB_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -I$(LIBFT_DIR)
 
 clean:
 	rm -f $(OBJ_SRV) $(OBJ_CLI)
-	make clean -C $(LIB_DIR)
+	make clean -C $(LIBFT_DIR)
 #cleansrv:
 #	rm -f $(OBJ_SRV)
 #cleancli:
@@ -43,8 +44,8 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-	make fclean -C $(LIB_DIR)
+	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
-.PHONY: all srv cli lib clean fclean re
+.PHONY: all srv cli libft clean fclean re
