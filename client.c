@@ -36,14 +36,18 @@ static int	stream_char(int pid, char c)
 int	main(int argc, char **argv)
 {
 	int	pid;
+	int	i;
 
 	pid = ft_atoi(argv[1]);
+	i = 0;
 	if (argc != 3)
 		return (-1);
 	if (pid > 0)
 	{
 		//kill(pid, argv[2][0]);
-		stream_char(pid, argv[2][0]);
+		while (argv[2][i])
+			stream_char(pid, argv[2][i++]);
+		stream_char(pid, argv[2][i]);
 		//if (sigemptyset(sigset) == -1)
 		//	return (-1);
 		//if (sigaddset(sigset, SIGUSR1));
