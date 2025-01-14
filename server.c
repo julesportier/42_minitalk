@@ -12,6 +12,13 @@
 
 #include "minitalk.h"
 
+//static int	confirm_message(pid)
+//{
+//	if (kill(pid, SIGUSR1))
+//		return (-1);
+//	return (0);
+//}
+
 void	print_sig(int sig)
 {
 	if (sig == SIGUSR1)
@@ -20,17 +27,50 @@ void	print_sig(int sig)
 		ft_printf("0");
 	else
 		ft_printf("unknown signal\n");
+	//confirm_message(
+}
+
+static int	parse_char(int sig, unsigned char *c)
+{
+	if (sig != SIGUSR1 && sig != SIGUSR2)
+		return (-1);
+	*c = *c >> 1;
+	if (sig == SIGUSR1)
+		*c = *c | 128;
+	return (0);
+}
+
+void	handler(int sig)
+{
+	static int	i = 1;
+	static unsigned char	c = 0;
+
+	print_sig(sig);
+	if (parse_char(sig, &c) == -1)
+	{
+		ft_printf("unknown signal\n");
+		return ;
+	}
+	if (i % 8 == 0 && i != 0)
+	{
+		ft_printf("\n%c\n", c);
+		//// DEBUG don't print 
+		//int	ptr = 0;
+		//ftpf_putuibase_fd((unsigned int)c, "01", 1, &ptr);
+		//ft_printf("\n\n");
+		//// ENDDEBUG
+		c = 0;
+	}
+	i++;
 }
 
 int	main(int argc, char **argv)
 {
 	struct sigaction	sigact;
-	//sigset_t	*sigmask;
 
 	(void)argv;
-	//sigmask = init_sig_mask();
-	sigact.sa_handler = &print_sig;
-	//sigact.sa_mask = *sigmask;
+	//sigact.sa_handler = &print_sig;
+	sigact.sa_handler = &handler;
 	if (argc != 1)
 		return (-1);
 	ft_printf("%d\n", getpid());
