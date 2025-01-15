@@ -32,8 +32,6 @@ void	print_sig(int sig)
 
 static int	encode_byte(int sig, unsigned char *c)
 {
-	if (sig != SIGUSR1 && sig != SIGUSR2)
-		return (-1);
 	*c = *c << 1;
 	if (sig == SIGUSR1)
 		*c = 1 | *c;
