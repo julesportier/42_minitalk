@@ -12,7 +12,7 @@
 
 #include "minitalk.h"
 
-static int	stream_char(int pid, char c)
+static int	stream_byte(int pid, char c)
 {
 	int	i;
 	int	err;
@@ -46,8 +46,8 @@ int	main(int argc, char **argv)
 	{
 		//kill(pid, argv[2][0]);
 		while (argv[2][i])
-			stream_char(pid, argv[2][i++]);
-		stream_char(pid, argv[2][i]);
+			stream_byte(pid, argv[2][i++]);
+		stream_byte(pid, '\0');
 		//if (sigemptyset(sigset) == -1)
 		//	return (-1);
 		//if (sigaddset(sigset, SIGUSR1));
