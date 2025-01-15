@@ -20,13 +20,13 @@ static int	stream_byte(int pid, char c)
 	i = 0;
 	while (i < 8)
 	{
-		if (c % 2 != 0)
+		if (128 & c)
 			err = kill(pid, SIGUSR1);
 		else
 			err = kill(pid, SIGUSR2);
 		if (err == -1)
 			return (-1);
-		c = c >> 1;
+		c = c << 1;
 		i++;
 		usleep(2);
 	}

@@ -34,9 +34,9 @@ static int	encode_byte(int sig, unsigned char *c)
 {
 	if (sig != SIGUSR1 && sig != SIGUSR2)
 		return (-1);
-	*c = *c >> 1;
+	*c = *c << 1;
 	if (sig == SIGUSR1)
-		*c = *c | 128;
+		*c = 1 | *c;
 	return (0);
 }
 
