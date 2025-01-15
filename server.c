@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:07:21 by juportie          #+#    #+#             */
-/*   Updated: 2025/01/15 08:38:10 by juportie         ###   ########.fr       */
+/*   Updated: 2025/01/15 10:47:51 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,41 @@ void	print_sig(int sig)
 	//confirm_message(
 }
 
+//void	signal_handler(int sig)
+//{
+//	static int	i = 1;
+//	static unsigned char	c = 0;
+//
+//	print_sig(sig);
+//	encode_byte(sig, &c);
+//	if (i % 8 == 0 && i != 0)
+//	{
+//		ft_printf("%c\n", c);
+//		//// DEBUG don't print 
+//		//int	ptr = 0;
+//		//ftpf_putuibase_fd((unsigned int)c, "01", 1, &ptr);
+//		//ft_printf("\n\n");
+//		//// ENDDEBUG
+//		c = 0;
+//	}
+//	i++;
+//}
 void	signal_handler(int sig)
 {
 	static int	i = 1;
-	static unsigned char	c = 0;
+	static int	cli_pid = 0;
 
 	print_sig(sig);
-	encode_byte(sig, &c);
-	if (i % 8 == 0 && i != 0)
+	encode_int(sig, &cli_pid);
+	if (i % 32 == 0 && i != 0)
 	{
-		ft_printf("%c\n", c);
+		ft_printf("\n%d\n", cli_pid);
 		//// DEBUG don't print 
 		//int	ptr = 0;
 		//ftpf_putuibase_fd((unsigned int)c, "01", 1, &ptr);
 		//ft_printf("\n\n");
 		//// ENDDEBUG
-		c = 0;
+		cli_pid = 0;
 	}
 	i++;
 }

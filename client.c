@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:50:08 by juportie          #+#    #+#             */
-/*   Updated: 2025/01/13 13:00:26 by juportie         ###   ########.fr       */
+/*   Updated: 2025/01/15 10:50:48 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@ static int	stream_byte(int pid, char c)
 	return (0);
 }
 
+static	int	send_pid(int pid)
+{
+	int	i;
+	char err;
+
+	i = 4;
+	while (i--)
+	{
+		err = stream_byte(pid, pid >> (i * 8));
+		if (err)
+			return (-1);
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	int	pid;
@@ -44,10 +59,10 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (pid > 0)
 	{
-		//kill(pid, argv[2][0]);
-		while (argv[2][i])
-			stream_byte(pid, argv[2][i++]);
-		stream_byte(pid, '\0');
+		send_pid(pid);
+		//while (argv[2][i])
+		//	stream_byte(pid, argv[2][i++]);
+		//stream_byte(pid, '\0');
 		//if (sigemptyset(sigset) == -1)
 		//	return (-1);
 		//if (sigaddset(sigset, SIGUSR1));
