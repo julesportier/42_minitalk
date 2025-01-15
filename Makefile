@@ -6,14 +6,16 @@ CLIENT := client
 NAME := $(SERVER)\
 		$(CLIENT)
 
-#HEADER := minitalk.h
+HEADER := minitalk.h
 
 SRC_SRV := server.c
 SRC_CLI := client.c
+SRC_UTILS := bit_stream.c
 
 #OBJ := $(SRC:%.c=%.o)
 OBJ_SRV := $(SRC_SRV:%.c=%.o)
 OBJ_CLI := $(SRC_CLI:%.c=%.o)
+OBJ_UTILS := $(SRC_UTILS:%.c=%.o)
 
 #FT_PRINTF_DIR := ft_printf/
 LIBFT := ft
@@ -25,13 +27,13 @@ cli: libft $(CLIENT)
 libft:
 	make -C $(LIBFT_DIR)
 
-$(SERVER): $(OBJ_SRV)
-	$(CC) $(CFLAGS) $< -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
+$(SERVER): $(OBJ_UTILS) $(OBJ_SRV)
+	$(CC) $(CFLAGS) $? -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
-$(CLIENT): $(OBJ_CLI)
-	$(CC) $(CFLAGS) $< -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
+$(CLIENT): $(OBJ_UTILS) $(OBJ_CLI)
+	$(CC) $(CFLAGS) $? -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
-%.o: %.c Makefile
+%.o: %.c Makefile $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@ -I$(LIBFT_DIR)
 
 clean:

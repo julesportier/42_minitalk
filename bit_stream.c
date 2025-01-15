@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   bit_stream.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 11:16:46 by juportie          #+#    #+#             */
-/*   Updated: 2025/01/15 08:53:46 by juportie         ###   ########.fr       */
+/*   Created: 2025/01/15 08:31:07 by juportie          #+#    #+#             */
+/*   Updated: 2025/01/15 08:36:50 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "minitalk.h"
 
-#include <unistd.h>
-#include <signal.h>
-#include "libft/libft.h"
-#include "libft/ftpf_printf.h"
+void	encode_byte(int sig, unsigned char *c)
+{
+	*c = *c << 1;
+	if (sig == SIGUSR1)
+		*c = 1 | *c;
+}
 
-void	encode_byte(int sig, unsigned char *c);
-void	encode_int(int sig, int	*i);
-
-#endif
+void	encode_int(int sig, int	*i)
+{
+	*i = *i << 1;
+	if (sig == SIGUSR1)
+		*i = 1 | *i;
+}

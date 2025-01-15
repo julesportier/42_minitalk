@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:07:21 by juportie          #+#    #+#             */
-/*   Updated: 2025/01/13 12:55:41 by juportie         ###   ########.fr       */
+/*   Updated: 2025/01/15 08:38:10 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,13 @@ void	print_sig(int sig)
 	//confirm_message(
 }
 
-static int	encode_byte(int sig, unsigned char *c)
-{
-	*c = *c << 1;
-	if (sig == SIGUSR1)
-		*c = 1 | *c;
-	return (0);
-}
-
 void	signal_handler(int sig)
 {
 	static int	i = 1;
 	static unsigned char	c = 0;
 
 	print_sig(sig);
-	if (encode_byte(sig, &c) == -1)
-	{
-		ft_printf("unknown signal\n");
-		return ;
-	}
+	encode_byte(sig, &c);
 	if (i % 8 == 0 && i != 0)
 	{
 		ft_printf("%c\n", c);
