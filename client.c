@@ -28,7 +28,7 @@ static int	stream_char(int pid, char c)
 			return (-1);
 		c = c >> 1;
 		i++;
-		usleep(1000);
+		usleep(2);
 	}
 	return (0);
 }
