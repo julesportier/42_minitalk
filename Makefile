@@ -27,17 +27,17 @@ cli: libft $(CLIENT)
 libft:
 	make -C $(LIBFT_DIR)
 
-$(SERVER): $(OBJ_UTILS) $(OBJ_SRV)
-	$(CC) $(CFLAGS) $? -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
+$(SERVER): $(OBJ_SRV) $(OBJ_UTILS)
+	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
-$(CLIENT): $(OBJ_UTILS) $(OBJ_CLI)
+$(CLIENT): $(OBJ_CLI)
 	$(CC) $(CFLAGS) $? -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
 %.o: %.c Makefile $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ -I$(LIBFT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ_SRV) $(OBJ_CLI)
+	rm -f $(OBJ_SRV) $(OBJ_CLI) $(OBJ_UTILS)
 	make clean -C $(LIBFT_DIR)
 #cleansrv:
 #	rm -f $(OBJ_SRV)
