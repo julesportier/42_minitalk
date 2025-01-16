@@ -31,7 +31,7 @@ $(SERVER): $(OBJ_SRV) $(OBJ_UTILS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
 $(CLIENT): $(OBJ_CLI)
-	$(CC) $(CFLAGS) $? -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
+	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
 %.o: %.c Makefile $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
