@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
-#include <stdio.h>
-//static int	confirm_message(pid)
-//{
-//	if (kill(pid, SIGUSR1))
-//		return (-1);
-//	return (0);
-//}
+
+static int	send_confirmation(pid)
+{
+	if (kill(pid, SIGUSR1))
+		return (-1);
+	return (0);
+}
 
 //static void	print_sig(int sig)
 //{
@@ -113,6 +113,7 @@ static void	signal_handler(int sig)
 			data.str = tmp;
 			ft_printf("data.str %s\n", data.str);
 		}
+		send_confirmation(data.cli_pid);
 	}
 }
 
