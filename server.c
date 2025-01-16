@@ -83,12 +83,7 @@ static int	reset_data(t_connection_data *data)
 
 static void	signal_handler(int sig)
 {
-	static t_connection_data	data = {
-		.status = WAITING,
-		.cli_pid = 0,
-		.c = 0,
-		.str = NULL,
-	};
+	static t_connection_data	data;
 	char	*tmp;
 
 	if (data.status == WAITING)
