@@ -11,13 +11,6 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
-#include <stdio.h>
-//static int	confirm_message(pid)
-//{
-//	if (kill(pid, SIGUSR1))
-//		return (-1);
-//	return (0);
-//}
 
 //static void	print_sig(int sig)
 //{
@@ -30,19 +23,26 @@
 //	//confirm_message(
 //}
 
-static int	store_cli_pid(int sig, int *cli_pid)
-{
-	static int	i = 1;
+//static int	store_cli_pid(int sig, int *cli_pid)
+//{
+//	static int	i = 1;
+//
+//	encode_int(sig, cli_pid);
+//	if (i == 32)
+//	{
+//		//ft_printf("\ncli_pid %d\n", *cli_pid);
+//		i = 1;
+//		return (1);
+//	}
+//	i++;
+//	return (0);
+//}
 
-	encode_int(sig, cli_pid);
-	if (i == 32)
-	{
-		//ft_printf("\ncli_pid %d\n", *cli_pid);
-		i = 1;
-		return (1);
-	}
-	i++;
-	return (0);
+static int	confirm_message(pid)
+{
+	if (kill(pid, SIGUSR1))
+		return (0);
+	return (1);
 }
 
 static int	store_byte(int sig, char *c)
@@ -52,10 +52,10 @@ static int	store_byte(int sig, char *c)
 	//print_sig(sig);
 	//printf("*c -> %c\n", *c);
 	encode_byte(sig, c);
-	ft_printf("store_byte call %d\n", i);
+	//ft_printf("store_byte call %d\n", i);
 	if (i == 8)
 	{
-		ft_printf("store_byte byteend result %c\n\n", *c);
+		//ft_printf("store_byte byteend result %c\n\n", *c);
 		//// DEBUG don't print 
 		//int	ptr = 0;
 		//ftpf_putuibase_fd((unsigned int)c, "01", 1, &ptr);
@@ -68,12 +68,10 @@ static int	store_byte(int sig, char *c)
 	return (0);
 }
 
-static int	reset_data(t_connection_data *data)
+static int	reset_data(t_string_data *data)
 {
 	if (data == NULL)
 		return (-1);
-	data->status = WAITING;
-	data->cli_pid = 0;
 	data->c = 0;
 	if (data->str)
 		free(data->str);
@@ -81,53 +79,48 @@ static int	reset_data(t_connection_data *data)
 	return (0);
 }
 
-static void	signal_handler(int sig)
+static void	signal_handler(int sig, siginfo_t *info, void *context)
 {
-	static t_connection_data	data;
+	static t_string_data	data;
 	char	*tmp;
 
-	if (data.status == WAITING)
+	(void)context;
+	//ft_printf("info->si_pid == %d\n", info->si_pid);
+	if (store_byte(sig, &(data.c)))
 	{
-		if (store_cli_pid(sig, &(data.cli_pid)))
+		//ft_printf("data.c %c\n", data.c);
+		if (data.c == '\0')
 		{
-			data.status = CONNECTED;
-			ft_printf("server connected to client %d\n", data.cli_pid);
+			ft_putendl_fd(data.str, 1);
+			//ft_printf("reset data\n");
+			reset_data(&data);
+			//usleep(100);
+			//return ;
 		}
-	}
-	else
-	{
-		//ft_printf("data.status -> %d\n", data.status);
-		if (store_byte(sig, &(data.c)))
+		else
 		{
-			ft_printf("data.c %c\n", data.c);
-			if (data.c == '\0')
-			{
-				ft_printf("SRV OUT : %s\n", data.str);
-				ft_printf("reset data\n");
-				reset_data(&data);
-				return ;
-			}
 			//ft_printf("data.c -> %c\n", data.c);
 			tmp = ft_strjoin(data.str, &(data.c));
 			free(data.str);
 			data.str = tmp;
-			ft_printf("data.str %s\n", data.str);
+			//ft_printf("data.str %s\n", data.str);
 		}
 	}
+	if (!confirm_message(info->si_pid))
+		ft_printf("server message confirmation failed (wrong pid)\n");
 }
 
 
 int	main(int argc, char **argv)
 {
 	struct sigaction	sigact;
-	int	cli_pid;
 
-	cli_pid = 0;
-	(void)argv;
-	//sigact.sa_handler = &print_sig;
-	sigact.sa_handler = &signal_handler;
 	if (argc != 1)
 		return (-1);
+	(void)argv;
+	sigact.sa_flags = SA_SIGINFO;
+	sigact.sa_sigaction = &signal_handler;
+	sigemptyset(&sigact.sa_mask);
 	ft_printf("%d\n", getpid());
 	while (1)
 	{
