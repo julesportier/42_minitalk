@@ -122,11 +122,9 @@ int	main(int argc, char **argv)
 	sigact.sa_sigaction = &signal_handler;
 	sigemptyset(&sigact.sa_mask);
 	ft_printf("%d\n", getpid());
+	sigaction(SIGUSR1, &sigact, NULL);
+	sigaction(SIGUSR2, &sigact, NULL);
 	while (1)
-	{
-		sigaction(SIGUSR1, &sigact, NULL);
-		sigaction(SIGUSR2, &sigact, NULL);
 		pause();
-	}
 	return (0);
 }

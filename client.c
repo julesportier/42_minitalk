@@ -69,6 +69,7 @@ int	main(int argc, char **argv)
 	if (srv_pid < 1)
 		return (-1);
 	//ft_printf("test\n");
+	sigaction(SIGUSR1, &sigact, NULL);
 	if (stream_byte(srv_pid, g_string_to_send[0]) == -1)
 		return (-1);
 	while (--stream_len)
@@ -76,7 +77,6 @@ int	main(int argc, char **argv)
 		//ft_printf("stream_len == %d\n", stream_len);
 		//if (sigaction(SIGUSR1, &sigact, NULL) == -1)
 		//	return (-1);
-		sigaction(SIGUSR1, &sigact, NULL);
 		pause();
 	}
 	return (0);
