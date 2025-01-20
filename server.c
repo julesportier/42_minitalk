@@ -107,7 +107,7 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 		}
 	}
 	if (!confirm_message(info->si_pid))
-		ft_printf("server message confirmation failed (wrong pid)\n");
+		ft_putendl_fd("server message confirmation failed (wrong pid)", 2);
 }
 
 
