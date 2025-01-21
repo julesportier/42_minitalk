@@ -41,13 +41,9 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 
 	(void)sig;
 	(void)context;
-	//if (*g_string_to_send[char_count])
 	ret = stream_byte(info->si_pid, g_string_to_send[char_count]);
 	if (ret == 1)
-	{
 		char_count++;
-		//ft_printf("char_count == %d\n", char_count);
-	}
 	else if (ret == -1)
 		ft_printf("stream failed (wrong pid, sig or permissions)\n"); 
 }
@@ -69,15 +65,11 @@ int	main(int argc, char **argv)
 	sigact.sa_sigaction = &signal_handler;
 	if (init_mask(&sigact) == -1)
 		return (-1);
-	//ft_printf("test\n");
 	sigaction(SIGUSR1, &sigact, NULL);
 	if (stream_byte(srv_pid, g_string_to_send[0]) == -1)
 		return (-1);
 	while (--stream_len)
 	{
-		//ft_printf("stream_len == %d\n", stream_len);
-		//if (sigaction(SIGUSR1, &sigact, NULL) == -1)
-		//	return (-1);
 		pause();
 	}
 	return (0);
