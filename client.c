@@ -14,6 +14,32 @@
 
 static const char	*g_string_to_send;
 
+static int	init_main_vars(
+	const char *argv1, const char *argv2,
+	int *s_len, int *srv_pid
+)
+{
+	g_string_to_send = argv2;
+	*s_len = (ft_strlen(g_string_to_send) + 1) * 8;
+	*srv_pid = ft_atoi(argv1);
+	if (*srv_pid < 1)
+		return (-1);
+	return (0);
+}
+
+static int	init_sigaction(void)
+{
+	struct sigaction sigact;
+
+	sigact.sa_flags = SA_SIGINFO;
+	sigact.sa_sigaction = &signal_handler;
+	if (init_mask(&sigact) == -1)
+		return (-1);
+	if (sigaction(SIGUSR1, &sigact, NULL) == -1)
+		return (-1);
+	return (0);
+}
+
 static int	stream_byte(int pid, char c)
 {
 	static int	i;
@@ -50,25 +76,18 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 
 int	main(int argc, char **argv)
 {
-	struct sigaction	sigact;
 	int	srv_pid;
-	int	stream_len;
+	int	s_len;
 
 	if (argc != 3)
 		return (-1);
-	g_string_to_send = argv[2];
-	stream_len = (ft_strlen(g_string_to_send) + 1) * 8;
-	srv_pid = ft_atoi(argv[1]);
-	if (srv_pid < 1)
+	if (init_main_vars(argv[1], argv[2], &s_len, &srv_pid) == -1)
 		return (-1);
-	sigact.sa_flags = SA_SIGINFO;
-	sigact.sa_sigaction = &signal_handler;
-	if (init_mask(&sigact) == -1)
+	if (init_sigaction() == -1)
 		return (-1);
-	sigaction(SIGUSR1, &sigact, NULL);
 	if (stream_byte(srv_pid, g_string_to_send[0]) == -1)
 		return (-1);
-	while (--stream_len)
+	while (--s_len)
 	{
 		pause();
 	}
