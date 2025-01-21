@@ -6,7 +6,7 @@
 /*   By: juportie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:07:21 by juportie          #+#    #+#             */
-/*   Updated: 2025/01/15 14:03:56 by juportie         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:59:10 by juportie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,21 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 		if (data.c == '\0')
 		{
 			ft_putendl_fd(data.str, 1);
-			reset_data(&data);
+			if (reset_data(&data) == -1)
+				exit(EXIT_FAILURE);
 		}
 		else
 		{
 			tmp = ft_strjoin(data.str, &(data.c));
 			free(data.str);
+			if (tmp == NULL)
+				exit(EXIT_FAILURE);
 			data.str = tmp;
 		}
 	}
 	if (!confirm_message(info->si_pid))
-		ft_putendl_fd("server message confirmation failed (wrong pid)", 2);
+		exit(EXIT_FAILURE);
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -76,6 +78,7 @@ int	main(int argc, char **argv)
 	if (argc != 1)
 		return (-1);
 	(void)argv;
+	ft_bzero(&sigact, sizeof(struct sigaction));
 	sigact.sa_flags = SA_SIGINFO;
 	sigact.sa_sigaction = &signal_handler;
 	if (init_mask(&sigact) == -1)
