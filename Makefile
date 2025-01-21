@@ -1,5 +1,5 @@
 CC := cc
-CFLAGS := -Wall -Werror -Wextra
+CFLAGS := -Wall -Werror -Wextra -g3
 
 SERVER := server
 CLIENT := client
@@ -30,7 +30,7 @@ libft:
 $(SERVER): $(OBJ_SRV) $(OBJ_UTILS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
-$(CLIENT): $(OBJ_CLI)
+$(CLIENT): $(OBJ_CLI) $(OBJ_UTILS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
 
 %.o: %.c Makefile $(HEADER)

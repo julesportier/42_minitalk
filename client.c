@@ -12,94 +12,73 @@
 
 #include "minitalk.h"
 
-//static int	stream_byte(int pid, char c)
-//{
-//	int	i;
-//	int	err;
-//
-//	i = 0;
-//	while (i < 8)
-//	{
-//		if (128 & c)
-//			err = kill(pid, SIGUSR1);
-//		else
-//			err = kill(pid, SIGUSR2);
-//		if (err == -1)
-//			return (-1);
-//		c = c << 1;
-//		i++;
-//		pause();
-//	}
-//	return (0);
-//}
-static int	stream_int(int pid, int d)
+static const char	*g_string_to_send;
+
+static int	stream_byte(int pid, char c)
 {
-	int	i;
+	static int	i;
 	int	err;
 
-	i = 0;
-	while (i < 32)
+	if (128 & (c << i))
+		err = kill(pid, SIGUSR1);
+	else
+		err = kill(pid, SIGUSR2);
+	if (err == -1)
+		return (-1);
+	i++;
+	if (i == 8)
 	{
-		if (2147483648 & d)
-			err = kill(pid, SIGUSR1);
-		else
-			err = kill(pid, SIGUSR2);
-		if (err == -1)
-			return (-1);
-		d = d << 1;
-		i++;
-		usleep(100);
+		i = 0;
+		return (1);
 	}
 	return (0);
 }
 
-static int	stream_byte(int pid, char c)
+static void	signal_handler(int sig, siginfo_t *info, void *context)
 {
-	int	i;
-	int	err;
+	static int	char_count;
+	int	ret;
 
-	i = 0;
-	while (i < 8)
+	(void)sig;
+	(void)context;
+	//if (*g_string_to_send[char_count])
+	ret = stream_byte(info->si_pid, g_string_to_send[char_count]);
+	if (ret == 1)
 	{
-		if (128 & c)
-			err = kill(pid, SIGUSR1);
-		else
-			err = kill(pid, SIGUSR2);
-		if (err == -1)
-			return (-1);
-		c = c << 1;
-		i++;
-		pause();
+		char_count++;
+		//ft_printf("char_count == %d\n", char_count);
 	}
-	return (0);
+	else if (ret == -1)
+		ft_printf("stream failed (wrong pid, sig or permissions)\n"); 
 }
 
 int	main(int argc, char **argv)
 {
-	int	srv_pid;
-	int	i;
 	struct sigaction	sigact;
+	int	srv_pid;
+	int	stream_len;
 
 	if (argc != 3)
 		return (-1);
+	g_string_to_send = argv[2];
+	stream_len = (ft_strlen(g_string_to_send) + 1) * 8;
 	srv_pid = ft_atoi(argv[1]);
-	i = 0;
-	sigact.sa_handler = &signal_handler;
-	if (srv_pid > 0)
+	if (srv_pid < 1)
+		return (-1);
+	sigact.sa_flags = SA_SIGINFO;
+	sigact.sa_sigaction = &signal_handler;
+	if (init_mask(&sigact) == -1)
+		return (-1);
+	//ft_printf("test\n");
+	sigaction(SIGUSR1, &sigact, NULL);
+	if (stream_byte(srv_pid, g_string_to_send[0]) == -1)
+		return (-1);
+	while (--stream_len)
 	{
-		stream_int(srv_pid, getpid());
-		while (argv[2][i])
-		{
-			sigaction(SIGUSR1, &sigact, NULL);
-			stream_byte(srv_pid, argv[2][i++]);
-		}
-		stream_byte(srv_pid, '\0');
-		//if (sigemptyset(sigset) == -1)
+		//ft_printf("stream_len == %d\n", stream_len);
+		//if (sigaction(SIGUSR1, &sigact, NULL) == -1)
 		//	return (-1);
-		//if (sigaddset(sigset, SIGUSR1));
-		//	return(-1);
+		pause();
 	}
-	else
-		ft_printf("wrong signal (SIGUSR1 == 10; SIGUSR2 == 12)\n");
 	return (0);
 }

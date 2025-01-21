@@ -18,22 +18,14 @@
 #include "libft/libft.h"
 #include "libft/ftpf_printf.h"
 
-# ifndef CONNECTED
-#  define CONNECTED 1
-# endif
-# ifndef WAITING
-#  define WAITING 0
-# endif
-
 void	encode_byte(int sig, char *c);
 void	encode_int(int sig, int	*i);
+int	init_mask(struct sigaction *sigact);
 
-typedef struct	s_connection_data
+typedef struct	s_string_data
 {
-	int	status;
-	int	cli_pid;
 	char	c;
 	char	*str;
-}	t_connection_data;
+}	t_string_data;
 
 #endif
