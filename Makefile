@@ -1,10 +1,10 @@
 CC := cc
-CFLAGS := -Wall -Werror -Wextra -g3
+CFLAGS := -Wall -Werror -Wextra
 
 SERVER := server
 CLIENT := client
 NAME := $(SERVER)\
-		$(CLIENT)
+	$(CLIENT)
 
 HEADER := minitalk.h
 
