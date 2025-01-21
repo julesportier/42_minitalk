@@ -20,6 +20,7 @@
 
 void	encode_byte(int sig, char *c);
 void	encode_int(int sig, int	*i);
+int	init_mask(struct sigaction *sigact);
 
 typedef struct	s_string_data
 {

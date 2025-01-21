@@ -25,3 +25,16 @@ void	encode_int(int sig, int	*i)
 	if (sig == SIGUSR1)
 		*i = 1 | *i;
 }
+
+int	init_mask(struct sigaction *sigact)
+{
+	if (sigemptyset(&sigact->sa_mask) == -1)
+		return (-1);
+	if (sigaddset(&sigact->sa_mask, SIGUSR1) == -1)
+		return (-1);
+	if (sigaddset(&sigact->sa_mask, SIGUSR2) == -1)
+		return (-1);
+	if (sigaddset(&sigact->sa_mask, SIGINT) == -1)
+		return (-1);
+	return (0);
+}

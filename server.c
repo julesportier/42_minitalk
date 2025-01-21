@@ -120,7 +120,8 @@ int	main(int argc, char **argv)
 	(void)argv;
 	sigact.sa_flags = SA_SIGINFO;
 	sigact.sa_sigaction = &signal_handler;
-	sigemptyset(&sigact.sa_mask);
+	if (init_mask(&sigact) == -1)
+		return (0);
 	ft_printf("%d\n", getpid());
 	sigaction(SIGUSR1, &sigact, NULL);
 	sigaction(SIGUSR2, &sigact, NULL);

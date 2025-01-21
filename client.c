@@ -63,11 +63,12 @@ int	main(int argc, char **argv)
 	g_string_to_send = argv[2];
 	stream_len = (ft_strlen(g_string_to_send) + 1) * 8;
 	srv_pid = ft_atoi(argv[1]);
-	sigact.sa_flags = SA_SIGINFO;
-	sigact.sa_sigaction = &signal_handler;
-	sigemptyset(&sigact.sa_mask);
 	if (srv_pid < 1)
 		return (-1);
+	sigact.sa_flags = SA_SIGINFO;
+	sigact.sa_sigaction = &signal_handler;
+	if (init_mask(&sigact) == -1)
+		return (0);
 	//ft_printf("test\n");
 	sigaction(SIGUSR1, &sigact, NULL);
 	if (stream_byte(srv_pid, g_string_to_send[0]) == -1)
