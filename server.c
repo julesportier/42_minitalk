@@ -69,8 +69,8 @@ static int	init_sigaction(void)
 	ft_bzero(&sigact, sizeof(struct sigaction));
 	sigact.sa_flags = SA_SIGINFO;
 	sigact.sa_sigaction = &signal_handler;
-	//if (init_mask(&sigact) == -1)
-	//	return (-1);
+	if (init_mask(&sigact) == -1)
+		return (-1);
 	if (sigaction(SIGUSR1, &sigact, NULL) == -1)
 		return (-1);
 	if (sigaction(SIGUSR2, &sigact, NULL) == -1)

@@ -64,7 +64,5 @@ int	init_mask(struct sigaction *sigact)
 		return (-1);
 	if (sigaddset(&sigact->sa_mask, SIGUSR2) == -1)
 		return (-1);
-	if (sigaddset(&sigact->sa_mask, SIGINT) == -1)
-		return (-1);
 	return (0);
 }
