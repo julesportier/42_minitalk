@@ -26,6 +26,7 @@ srv: libft $(SERVER)
 cli: libft $(CLIENT)
 libft:
 	make -C $(LIBFT_DIR)
+bonus: all
 
 $(SERVER): $(OBJ_SRV) $(OBJ_UTILS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT_DIR) -l$(LIBFT)
