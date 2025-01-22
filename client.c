@@ -46,29 +46,6 @@ static int	init_sigaction(void)
 	return (0);
 }
 
-static int	stream_byte(int pid, char c)
-{
-	static int	i;
-
-	if (128 & (c << i))
-	{
-		if (kill(pid, SIGUSR1) == -1)
-			return (-1);
-	}
-	else
-	{
-		if (kill(pid, SIGUSR2) == -1)
-			return (-1);
-	}
-	i++;
-	if (i == 8)
-	{
-		i = 0;
-		return (1);
-	}
-	return (0);
-}
-
 static int	listen_confirmation(int srv_pid, char *str, int *s_len)
 {
 	static int	iter;

@@ -19,7 +19,8 @@
 #include "libft/ftpf_printf.h"
 
 void	encode_byte(int sig, char *c);
-void	encode_int(int sig, int	*i);
+int	store_byte(int sig, char *c);
+int	stream_byte(int pid, char c);
 int	init_mask(struct sigaction *sigact);
 
 typedef struct	s_string_data

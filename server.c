@@ -19,20 +19,6 @@ static int	confirm_message(pid)
 	return (1);
 }
 
-static int	store_byte(int sig, char *c)
-{
-	static int	i = 1;
-
-	encode_byte(sig, c);
-	if (i == 8)
-	{
-		i = 1;
-		return (1);
-	}
-	i++;
-	return (0);
-}
-
 static int	reset_data(t_string_data *data)
 {
 	if (data == NULL)
