@@ -45,14 +45,12 @@ static int	init_sigaction(void)
 	return (0);
 }
 
-static int	listen_confirmation(int srv_pid, char *str, int *s_len)
+static int	listen_send(int srv_pid, char *str, int *s_len)
 {
 	static int	iter;
 	static int	char_count;
 	int			ret;
 
-	if (++iter == TIMEOUT)
-		return (-1);
 	if (g_srv_confirmation == 1)
 	{
 		g_srv_confirmation = 0;
@@ -68,6 +66,8 @@ static int	listen_confirmation(int srv_pid, char *str, int *s_len)
 		else
 			return (1);
 	}
+	if (++iter == TIMEOUT)
+		return (-1);
 	usleep(1);
 	return (0);
 }
@@ -88,7 +88,7 @@ int	main(int argc, char **argv)
 	char_count = 0;
 	while (1)
 	{
-		ret = listen_confirmation(srv_pid, argv[2], &s_len);
+		ret = listen_send(srv_pid, argv[2], &s_len);
 		if (ret == -1)
 			return (-1);
 		else if (ret == 1)
