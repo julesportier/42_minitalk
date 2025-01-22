@@ -12,6 +12,8 @@
 
 #include "minitalk.h"
 
+static volatile sig_atomic_t	g_wait_len = 0;
+
 static int	confirm_message(pid)
 {
 	if (kill(pid, SIGUSR1))
@@ -36,6 +38,9 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 	char	*tmp;
 
 	(void)context;
+	if (g_wait_len == -1)
+		reset_data(&data);
+	g_wait_len = 0;
 	if (store_byte(sig, &(data.c)))
 	{
 		if (data.c == '\0')
@@ -73,6 +78,13 @@ int	main(int argc, char **argv)
 	sigaction(SIGUSR1, &sigact, NULL);
 	sigaction(SIGUSR2, &sigact, NULL);
 	while (1)
-		pause();
+	{
+		usleep(1);
+		if (g_wait_len >= 0)
+		{
+			if (++g_wait_len == TIMEOUT)
+				g_wait_len = -1;
+		}
+	}
 	return (0);
 }
