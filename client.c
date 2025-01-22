@@ -80,6 +80,7 @@ static int	listen_confirmation(int srv_pid, char *str, int *s_len)
 	if (g_srv_confirmation == 1)
 	{
 		g_srv_confirmation = 0;
+		iter = 0;
 		if ((*s_len)--)
 		{
 			ret = stream_byte(srv_pid, str[char_count]);
