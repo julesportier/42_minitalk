@@ -91,7 +91,7 @@ int	main(int argc, char **argv)
 		usleep(1);
 		if (g_wait_len >= 0)
 		{
-			if (++g_wait_len == TIMEOUT)
+			if (++g_wait_len >= TIMEOUT)
 				g_wait_len = -1;
 		}
 	}
