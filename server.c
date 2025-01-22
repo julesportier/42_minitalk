@@ -14,28 +14,26 @@
 
 static volatile sig_atomic_t	g_wait_len = 0;
 
-static int	confirm_message(pid)
+static void	confirm_message(int pid)
 {
-	if (kill(pid, SIGUSR1))
-		return (0);
-	return (1);
+	if (kill(pid, SIGUSR1) == -1)
+		exit(EXIT_FAILURE);
 }
 
-static int	reset_data(t_string_data *data)
+static void	reset_data(t_string_data *data)
 {
 	if (data == NULL)
-		return (-1);
+		exit(EXIT_FAILURE);
 	data->c = 0;
 	if (data->str)
 		free(data->str);
 	data->str = NULL;
-	return (0);
 }
 
 static void	signal_handler(int sig, siginfo_t *info, void *context)
 {
 	static t_string_data	data;
-	char	*tmp;
+	char					*tmp;
 
 	(void)context;
 	if (g_wait_len == -1)
@@ -46,8 +44,7 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 		if (data.c == '\0')
 		{
 			ft_putendl_fd(data.str, 1);
-			if (reset_data(&data) == -1)
-				exit(EXIT_FAILURE);
+			reset_data(&data);
 		}
 		else
 		{
@@ -58,8 +55,7 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 			data.str = tmp;
 		}
 	}
-	if (!confirm_message(info->si_pid))
-		exit(EXIT_FAILURE);
+	confirm_message(info->si_pid);
 }
 
 int	main(int argc, char **argv)

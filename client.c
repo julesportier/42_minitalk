@@ -29,13 +29,12 @@ static int	init_main_vars(
 static void	signal_handler(int sig)
 {
 	(void)sig;
-
 	g_srv_confirmation = 1;
 }
 
 static int	init_sigaction(void)
 {
-	struct sigaction sigact;
+	struct sigaction	sigact;
 
 	ft_bzero(&sigact, sizeof(struct sigaction));
 	sigact.sa_handler = &signal_handler;
@@ -50,7 +49,7 @@ static int	listen_confirmation(int srv_pid, char *str, int *s_len)
 {
 	static int	iter;
 	static int	char_count;
-	int	ret;
+	int			ret;
 
 	if (++iter == TIMEOUT)
 		return (-1);
