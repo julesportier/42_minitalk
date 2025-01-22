@@ -20,8 +20,12 @@ static void	confirm_message(int pid)
 		exit(EXIT_FAILURE);
 }
 
+// Start by executing store_byte() until it returns 1
+// to reinit it's internal static variable.
 static void	reset_data(t_string_data *data)
 {
+	while (store_byte(SIGUSR2, &(data->c)) != 1)
+		;
 	if (data == NULL)
 		exit(EXIT_FAILURE);
 	data->c = 0;
