@@ -62,21 +62,30 @@ static void	signal_handler(int sig, siginfo_t *info, void *context)
 	confirm_message(info->si_pid);
 }
 
-int	main(int argc, char **argv)
+static int	init_sigaction(void)
 {
 	struct sigaction	sigact;
 
-	if (argc != 1)
-		return (-1);
-	(void)argv;
 	ft_bzero(&sigact, sizeof(struct sigaction));
 	sigact.sa_flags = SA_SIGINFO;
 	sigact.sa_sigaction = &signal_handler;
-	if (init_mask(&sigact) == -1)
+	//if (init_mask(&sigact) == -1)
+	//	return (-1);
+	if (sigaction(SIGUSR1, &sigact, NULL) == -1)
+		return (-1);
+	if (sigaction(SIGUSR2, &sigact, NULL) == -1)
+		return (-1);
+	return (0);
+}
+
+int	main(int argc, char **argv)
+{
+	if (argc != 1)
+		return (-1);
+	(void)argv;
+	if (init_sigaction() == -1)
 		return (-1);
 	ft_printf("%d\n", getpid());
-	sigaction(SIGUSR1, &sigact, NULL);
-	sigaction(SIGUSR2, &sigact, NULL);
 	while (1)
 	{
 		usleep(1);
