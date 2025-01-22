@@ -52,7 +52,7 @@ static int	listen_confirmation(int srv_pid, char *str, int *s_len)
 	static int	char_count;
 	int	ret;
 
-	if (++iter == 10000)
+	if (++iter == TIMEOUT)
 		return (-1);
 	if (g_srv_confirmation == 1)
 	{
