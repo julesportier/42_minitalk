@@ -66,7 +66,7 @@ static int	listen_send(int srv_pid, char *str, int *s_len)
 		else
 			return (1);
 	}
-	if (++iter == TIMEOUT)
+	if (++iter >= TIMEOUT)
 		return (-1);
 	usleep(1);
 	return (0);
