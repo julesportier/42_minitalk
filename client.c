@@ -76,7 +76,6 @@ int	main(int argc, char **argv)
 {
 	int	srv_pid;
 	int	s_len;
-	int	char_count;
 	int	ret;
 
 	if (argc != 3)
@@ -85,7 +84,6 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (init_sigaction() == -1)
 		return (-1);
-	char_count = 0;
 	while (1)
 	{
 		ret = listen_send(srv_pid, argv[2], &s_len);
